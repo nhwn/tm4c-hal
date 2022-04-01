@@ -623,6 +623,7 @@ macro_rules! uart_hal_macro {
                 }
 
                 /// Write a complete string to the UART.
+                #[inline(always)]
                 pub fn write_all<I: ?Sized>(&mut self, data: &I)
                 where
                     I: AsRef<[u8]>,
@@ -652,6 +653,7 @@ macro_rules! uart_hal_macro {
 
             impl<TX, RTS> Tx<$UARTX, TX, RTS> {
                 /// Write a complete string to the UART.
+                #[inline(always)]
                 pub fn write_all<I: ?Sized>(&mut self, data: &I)
                 where
                     I: AsRef<[u8]>,
@@ -665,6 +667,7 @@ macro_rules! uart_hal_macro {
             impl<TX, RX, RTS, CTS> serial::Read<u8> for Serial<$UARTX, TX, RX, RTS, CTS> {
                 type Error = Void;
 
+                #[inline(always)]
                 fn read(&mut self) -> nb::Result<u8, Self::Error> {
                     if self.uart.fr.read().rxfe().bit() {
                         return Err(nb::Error::WouldBlock);
@@ -676,6 +679,7 @@ macro_rules! uart_hal_macro {
             impl<RX, CTS> serial::Read<u8> for Rx<$UARTX, RX, CTS> {
                 type Error = Void;
 
+                #[inline(always)]
                 fn read(&mut self) -> nb::Result<u8, Self::Error> {
                     // We're only doing RX operations here so this is safe.
                     let p = unsafe { &*$UARTX::ptr() };
@@ -696,6 +700,7 @@ macro_rules! uart_hal_macro {
                     Ok(())
                 }
 
+                #[inline(always)]
                 fn write(&mut self, byte: u8) -> nb::Result<(), Void> {
                     if self.uart.fr.read().txff().bit() {
                         return Err(nb::Error::WouldBlock);
@@ -715,6 +720,7 @@ macro_rules! uart_hal_macro {
                     Ok(())
                 }
 
+                #[inline(always)]
                 fn write(&mut self, byte: u8) -> nb::Result<(), Void> {
                     if self.uart.fr.read().txff().bit() {
                         return Err(nb::Error::WouldBlock);
